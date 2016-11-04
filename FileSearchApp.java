@@ -24,7 +24,20 @@ public class FileSearchApp {
         }
         
     }
-
+	
+    public boolean searchFileJava6( File file) throws FileNotFoundException{
+        boolean found = false;
+        
+        Scanner scanner = new Scanner( file, "UTF-8");
+        
+        while( scanner.hasNextLine()){
+            found = searchText( scanner.nextLine());
+            if( found ) break;
+        }
+        scanner.close();
+        return found;
+    }
+	
     public void walkDirectory(String path){
 
     }
