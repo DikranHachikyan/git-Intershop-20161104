@@ -70,17 +70,7 @@ public class FileSearchApp {
         walkDirectoryJava(path);
     }
     
-    public void walkDirectoryJava(String path) throws IOException{
-        File dir = new File(path);
-        File[] files = dir.listFiles();
-        
-        for( File file : files){
-            if( file.isDirectory()){
-                walkDirectoryJava( file.getAbsolutePath());
-            }
-            else{
-                processFile(file);
-            }
-        }
-   }
+    public void walkDirectoryJava( String path ) throws IOException {
+        Files.walk( Paths.get(path)).forEach( f->processFile( f.toFile()));
+    }
 }
