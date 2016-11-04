@@ -65,6 +65,11 @@ public class FileSearchApp {
         }
     }
 	
+	public boolean searchFileJava8( File file ) throws IOException {
+        return (! file.isDirectory())? Files.lines( file.toPath() , StandardCharsets.UTF_8)
+                                        .anyMatch( t->searchText( t )): false;
+    }
+	
 	//-------------- zipFiles   Implementations ---------------------------------
     public void zipFilesJava7() throws IOException{
         try( ZipOutputStream out = 
