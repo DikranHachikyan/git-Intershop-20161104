@@ -71,6 +71,11 @@ public class FileSearchApp {
     }
 	
 	//-------------- zipFiles   Implementations ---------------------------------
+
+	public void zipFilesJava8() throws IOException{
+		// TODO :)
+	}
+
     public void zipFilesJava7() throws IOException{
         try( ZipOutputStream out = 
                 new ZipOutputStream( new FileOutputStream( getZipFileName()))){
