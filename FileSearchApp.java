@@ -26,7 +26,7 @@ public class FileSearchApp {
     }
 
     public void walkDirectory(String path){
-
+		//a comment
     }
 
     public String getPath() {
@@ -68,19 +68,47 @@ public class FileSearchApp {
 	//walk directories - functionalities
 	public void walkDirectory( String path) throws IOException {
         walkDirectoryJava(path);
+        zipFilesJava();
     }
-    
-    public void walkDirectoryJava(String path) throws IOException{
-        File dir = new File(path);
-        File[] files = dir.listFiles();
+
+    public void walkDirectoryJava( String path ) throws IOException {
+        Files.walk( Paths.get(path)).forEach( f->processFile( f.toFile()));
+    }
+
+    private boolean searchText(String text) {
+        System.out.println("Search Line:" + text);
+        return ( this.getRegex() == null )? true :
+                                            //text.toLowerCase().contains( this.getRegex().toLowerCase() );
+                                            //text.matches(this.getRegex());
+                                            this.pattern.matcher(text).find();
+    }
+
+    private String getRelativeFileName(File file, File baseDir) {
+        String fileName = file.getAbsolutePath().substring( baseDir.getAbsolutePath().length());
         
-        for( File file : files){
-            if( file.isDirectory()){
-                walkDirectoryJava( file.getAbsolutePath());
-            }
-            else{
-                processFile(file);
+        fileName = fileName.replace("\\", "/");
+        
+        while( fileName.startsWith("/")){
+            fileName = fileName.substring(1);
+        }
+        return fileName;
+    }
+	
+	public void zipFilesJava() throws IOException{
+        try( ZipOutputStream out = 
+                new ZipOutputStream( new FileOutputStream( getZipFileName()))){
+            File baseDir = new File( getPath());
+            
+            for( File file : zipFiles){
+                String fileName = getRelativeFileName(file, baseDir);
+                
+                ZipEntry zipEntry = new ZipEntry( fileName);
+                zipEntry.setTime( file.lastModified());
+                out.putNextEntry(zipEntry);
+                
+                Files.copy(file.toPath(), out);
+                out.closeEntry();
             }
         }
-   }
+    }
 }
