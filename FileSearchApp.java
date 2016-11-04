@@ -64,8 +64,32 @@ public class FileSearchApp {
             System.out.println( "Error processing file:" + file + ":" + ex);
         }
     }
-
-	public void zipFilesJava6() throws IOException {
+	
+	public boolean searchFileJava8( File file ) throws IOException {
+        return (! file.isDirectory())? Files.lines( file.toPath() , StandardCharsets.UTF_8)
+                                        .anyMatch( t->searchText( t )): false;
+    }
+	
+	//-------------- zipFiles   Implementations ---------------------------------
+    public void zipFilesJava7() throws IOException{
+        try( ZipOutputStream out = 
+                new ZipOutputStream( new FileOutputStream( getZipFileName()))){
+            File baseDir = new File( getPath());
+            
+            for( File file : zipFiles){
+                String fileName = getRelativeFileName(file, baseDir);
+                
+                ZipEntry zipEntry = new ZipEntry( fileName);
+                zipEntry.setTime( file.lastModified());
+                out.putNextEntry(zipEntry);
+                
+                Files.copy(file.toPath(), out);
+                out.closeEntry();
+            }
+        }
+    }
+	
+    public void zipFilesJava6() throws IOException {
         ZipOutputStream out = null;
         
         try{
