@@ -25,10 +25,6 @@ public class FileSearchApp {
         
     }
 
-    public void walkDirectory(String path){
-
-    }
-
     public String getPath() {
         return path;
     }
