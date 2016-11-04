@@ -25,10 +25,6 @@ public class FileSearchApp {
         
     }
 
-    public void walkDirectory(String path){
-
-    }
-
     public String getPath() {
         return path;
     }
@@ -62,6 +58,53 @@ public class FileSearchApp {
             }
         } catch (IOException | UncheckedIOException ex) {
             System.out.println( "Error processing file:" + file + ":" + ex);
+        }
+    }
+	
+	//walk directories - functionalities
+	public void walkDirectory( String path) throws IOException {
+        walkDirectoryJava(path);
+        zipFilesJava();
+    }
+
+    public void walkDirectoryJava( String path ) throws IOException {
+        Files.walk( Paths.get(path)).forEach( f->processFile( f.toFile()));
+    }
+
+    private boolean searchText(String text) {
+        System.out.println("Search Line:" + text);
+        return ( this.getRegex() == null )? true :
+                                            //text.toLowerCase().contains( this.getRegex().toLowerCase() );
+                                            //text.matches(this.getRegex());
+                                            this.pattern.matcher(text).find();
+    }
+
+    private String getRelativeFileName(File file, File baseDir) {
+        String fileName = file.getAbsolutePath().substring( baseDir.getAbsolutePath().length());
+        
+        fileName = fileName.replace("\\", "/");
+        
+        while( fileName.startsWith("/")){
+            fileName = fileName.substring(1);
+        }
+        return fileName;
+    }
+	
+	public void zipFilesJava() throws IOException{
+        try( ZipOutputStream out = 
+                new ZipOutputStream( new FileOutputStream( getZipFileName()))){
+            File baseDir = new File( getPath());
+            
+            for( File file : zipFiles){
+                String fileName = getRelativeFileName(file, baseDir);
+                
+                ZipEntry zipEntry = new ZipEntry( fileName);
+                zipEntry.setTime( file.lastModified());
+                out.putNextEntry(zipEntry);
+                
+                Files.copy(file.toPath(), out);
+                out.closeEntry();
+            }
         }
     }
 }
