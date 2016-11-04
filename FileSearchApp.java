@@ -65,6 +65,25 @@ public class FileSearchApp {
         }
     }
 	
+	//-------------- zipFiles   Implementations ---------------------------------
+    public void zipFilesJava7() throws IOException{
+        try( ZipOutputStream out = 
+                new ZipOutputStream( new FileOutputStream( getZipFileName()))){
+            File baseDir = new File( getPath());
+            
+            for( File file : zipFiles){
+                String fileName = getRelativeFileName(file, baseDir);
+                
+                ZipEntry zipEntry = new ZipEntry( fileName);
+                zipEntry.setTime( file.lastModified());
+                out.putNextEntry(zipEntry);
+                
+                Files.copy(file.toPath(), out);
+                out.closeEntry();
+            }
+        }
+    }
+	
     public void zipFilesJava6() throws IOException {
         ZipOutputStream out = null;
         
