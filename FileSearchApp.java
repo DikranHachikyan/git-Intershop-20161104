@@ -64,4 +64,39 @@ public class FileSearchApp {
             System.out.println( "Error processing file:" + file + ":" + ex);
         }
     }
+	
+    public void zipFilesJava6() throws IOException {
+        ZipOutputStream out = null;
+        
+        try{
+            out = new ZipOutputStream( new FileOutputStream( getZipFileName() ));
+            File baseDir = new File( getPath() );
+            for( File file : zipFiles ){
+                String fileName = getRelativeFileName( file, baseDir);
+                
+                ZipEntry zipEntry = new ZipEntry(fileName);
+                zipEntry.setTime( file.lastModified() );
+                out.putNextEntry( zipEntry );
+                
+                int bufferSize = 2048;
+                byte [] buffer = new byte[bufferSize];
+                int len = 0;
+                
+                BufferedInputStream in = new BufferedInputStream(
+                        new FileInputStream(file), bufferSize
+                );
+                
+                while( (len = in.read(buffer, 0, bufferSize)) != -1 ){
+                    out.write( buffer, 0, len);
+                }
+                
+                in.close();
+                out.closeEntry();
+            } //for
+            
+        }
+        finally{
+                out.close();
+            }
+    }
 }
