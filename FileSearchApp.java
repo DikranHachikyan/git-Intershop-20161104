@@ -27,14 +27,8 @@ public class FileSearchApp {
 	
     public boolean searchFileJava( File file) throws FileNotFoundException{
         
-        List<String> lines = Files.readAllLines( file.toPath(), StandardCharsets.UTF_8 );
-        
-        for( String line: lines){
-            if( searchText( line)){
-                return true;
-            }
-        }
-        return false;       
+        return (! file.isDirectory())? Files.lines( file.toPath() , StandardCharsets.UTF_8)
+                                        .anyMatch( t->searchText( t )): false;    
     }
 	
 
