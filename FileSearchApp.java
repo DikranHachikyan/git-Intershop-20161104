@@ -25,19 +25,19 @@ public class FileSearchApp {
         
     }
 	
-    public boolean searchFileJava6( File file) throws FileNotFoundException{
-        boolean found = false;
+    public boolean searchFileJava( File file) throws FileNotFoundException{
         
-        Scanner scanner = new Scanner( file, "UTF-8");
+        List<String> lines = Files.readAllLines( file.toPath(), StandardCharsets.UTF_8 );
         
-        while( scanner.hasNextLine()){
-            found = searchText( scanner.nextLine());
-            if( found ) break;
+        for( String line: lines){
+            if( searchText( line)){
+                return true;
+            }
         }
-        scanner.close();
-        return found;
+        return false;       
     }
 	
+
     public void walkDirectory(String path){
 
     }
