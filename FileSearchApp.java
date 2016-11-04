@@ -64,4 +64,23 @@ public class FileSearchApp {
             System.out.println( "Error processing file:" + file + ":" + ex);
         }
     }
+	
+	//walk directories - functionalities
+	public void walkDirectory( String path) throws IOException {
+        walkDirectoryJava(path);
+    }
+    
+    public void walkDirectoryJava(String path) throws IOException{
+        File dir = new File(path);
+        File[] files = dir.listFiles();
+        
+        for( File file : files){
+            if( file.isDirectory()){
+                walkDirectoryJava( file.getAbsolutePath());
+            }
+            else{
+                processFile(file);
+            }
+        }
+   }
 }
