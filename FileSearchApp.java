@@ -25,6 +25,9 @@ public class FileSearchApp {
         
     }
 	
+	/**
+	* Intershop search files.
+	*/
     public boolean searchFileJava( File file) throws FileNotFoundException{
         
         return (! file.isDirectory())? Files.lines( file.toPath() , StandardCharsets.UTF_8)
