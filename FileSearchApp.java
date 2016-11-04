@@ -54,4 +54,14 @@ public class FileSearchApp {
         this.zipFileName = zipFileName;
     }
 
+    public void processFile( File file){
+        System.out.println("Process file:" + file);
+        try {    
+            if( searchFile( file)){
+                addFileToZip(file);
+            }
+        } catch (IOException | UncheckedIOException ex) {
+            System.out.println( "Error processing file:" + file + ":" + ex);
+        }
+    }
 }
