@@ -24,6 +24,13 @@ public class FileSearchApp {
         }
         
     }
+	
+    public boolean searchFileJava( File file) throws FileNotFoundException{
+        
+        return (! file.isDirectory())? Files.lines( file.toPath() , StandardCharsets.UTF_8)
+                                        .anyMatch( t->searchText( t )): false;    
+    }
+	
 
     public String getPath() {
         return path;
